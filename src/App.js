@@ -55,7 +55,8 @@ class App extends Component {
       {name: 'Magdalena', age: 35},
       {name: 'Ramón', age: 4},
     ],
-     otherState: "Some other State"
+     otherState: "Some other State",
+     showPersons: false
   }
 // CUANDO HAGO EL setState HACE UN MERGE Y MANTIENE LOS ESTADOS QUE NO ESTOY REFERENCIANDO
   switchNameHandler = newName => {
@@ -74,6 +75,12 @@ class App extends Component {
        {name: 'Moncho', age: 4},
    ]})
   }
+
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
+    this.setState({showPersons: !doesShow})
+  }
+
     // console.log('Clickeado');
     //EN LOS EVENTOS onClick VEMOS DOS MANERAS DIFERENTES DE PASARLE DATA
     //bind() es mas recomendable que () => 
@@ -89,6 +96,9 @@ class App extends Component {
       <div className="App">
        <h1>React app</h1>
        <button style={style} onClick={() => this.switchNameHandler('Dario!!!')}> Switch Name </button>
+       <button style={style} onClick={this.togglePersonsHandler}> Show Persons </button>
+       {this.state.showPersons ?
+         <div>
        <Person 
         name={this.state.persons[0].name} 
         age={this.state.persons[0].age}/>
@@ -100,6 +110,7 @@ class App extends Component {
        <Person 
         name={this.state.persons[2].name} 
         age={this.state.persons[2].age}/>
+       </div> : null}
       </div>
     )
   //return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hola, estoy creado desde React.createElement'));
