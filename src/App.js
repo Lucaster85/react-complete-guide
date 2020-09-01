@@ -51,29 +51,45 @@ class App extends Component {
   
   state = {
     persons: [
-      {name: 'Lucas', age: 35},
-      {name: 'Magdalena', age: 35},
-      {name: 'Ramón', age: 4},
+      {id: 'lakjsdhf', name: 'Lucas', age: 35},
+      {id: 'jfkdls', name: 'Magdalena', age: 35},
+      {id: 'pwoqueyrd', name: 'Ramón', age: 4},
     ],
      otherState: "Some other State",
      showPersons: false
   }
 // CUANDO HAGO EL setState HACE UN MERGE Y MANTIENE LOS ESTADOS QUE NO ESTOY REFERENCIANDO
-  switchNameHandler = newName => {
+  /* switchNameHandler = newName => {
    this.setState({
      persons: [
       {name: newName, age: 35},
       {name: 'Magda', age: 35},
       {name: 'Moncho', age: 4},
   ]})
+  } */
+
+  deletePersonHandler = (indexPerson) => {
+    //let persons = this.state.persons.slice(); //ESTO DEVUELVE UNA COPIA DEL ARRAY PARA NO MANIPULAR EL STATE
+    const persons = [...this.state.persons]; //spread operator, creo un nuevo array con los datos del state
+    persons.splice(indexPerson, 1);
+    this.setState({persons}) //persons: persons
   }
-  changedHandler = event => {
-    this.setState({
-      persons: [
-       {name: 'Lucas', age: 35},
-       {name: event.target.value, age: 35},
-       {name: 'Moncho', age: 4},
-   ]})
+
+  nameChangedHandler = (event, id) => {
+    const personIndex = this.state.persons.findIndex((person) => {
+      return person.id === id;
+    });
+
+    const person = {
+      ...this.state.persons[personIndex]
+    }
+
+    person.name = event.target.value;
+    
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({persons})
   }
 
   togglePersonsHandler = () => {
@@ -92,25 +108,43 @@ class App extends Component {
       padding: '8px',
       cursor: 'pointer'
     }
+
+    let personsList = null;
+
+    if (this.state.showPersons) {
+      personsList = (
+        <div>
+          {this.state.persons.map((person, i) => {
+            return <Person
+            key={person.id}
+            click={() => this.deletePersonHandler(i)}
+            name={person.name}
+            age={person.age}
+            changed={(event) => this.nameChangedHandler(event, person.id)}/>
+          })}
+          {/* <Person 
+          name={this.state.persons[0].name} 
+          age={this.state.persons[0].age}/>
+          <Person
+          name={this.state.persons[1].name} 
+          age={this.state.persons[1].age}
+          click={this.switchNameHandler.bind(this, "Castro")}
+          changed={this.nameChangedHandler}>Un texto desde children</Person>
+          <Person 
+          name={this.state.persons[2].name} 
+          age={this.state.persons[2].age}/> */}
+        </div>        
+      );
+    }
+
     return (
       <div className="App">
        <h1>React app</h1>
        <button style={style} onClick={() => this.switchNameHandler('Dario!!!')}> Switch Name </button>
        <button style={style} onClick={this.togglePersonsHandler}> Show Persons </button>
-       {this.state.showPersons ?
-         <div>
-       <Person 
-        name={this.state.persons[0].name} 
-        age={this.state.persons[0].age}/>
-       <Person
-        name={this.state.persons[1].name} 
-        age={this.state.persons[1].age}
-        click={this.switchNameHandler.bind(this, "Castro")}
-        changed={this.changedHandler}>Un texto desde children</Person>
-       <Person 
-        name={this.state.persons[2].name} 
-        age={this.state.persons[2].age}/>
-       </div> : null}
+        {personsList}
+        {/* PARA REALISAR UN CONDICIONAL LO MEJOR ES USAR EL JXS EN UNA VARIABLE DENTRO
+        DEL METODO RENDER */}
       </div>
     )
   //return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hola, estoy creado desde React.createElement'));
