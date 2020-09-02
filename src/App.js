@@ -1,5 +1,6 @@
 import React, { Component } from 'react'; //CON CLASES
 //import React, { useState } from 'react'; //CON HOOKS
+//import Radium, { StyleRoot } from 'radium';
 import Person from './Person/Person';
 import './App.css';
 
@@ -102,11 +103,16 @@ class App extends Component {
     //bind() es mas recomendable que () => 
   render() {
     const style = {
-      backgroundColor: 'white',
+      backgroundColor: 'green',
+      color: 'white',
       font: 'inherit',
       border: '1px solid blue',
       padding: '8px',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      ':hover' : {
+        backgroundColor: 'yellowgreen',
+        color: 'black'
+      }
     }
 
     let personsList = null;
@@ -135,20 +141,38 @@ class App extends Component {
           age={this.state.persons[2].age}/> */}
         </div>        
       );
+          //Puedo cambiar el estilo con el condicional, ya que "style" es un {} de JS
+      style.backgroundColor = 'red';
+      style[':hover'] = {
+        backgroundColor: 'salmon',
+        color: 'black'
+      }
     }
 
+      const classes = [];
+      if (this.state.persons.length <= 2) classes.push('red')
+      if (this.state.persons.length <= 1) classes.push('bold')
+
     return (
+      //<StyleRoot> {/* USO ESTA ETIQUETA EN APP PARA QUE FUNCIONEN LAS @MEDIA QUERYS DE RADIUM */}
       <div className="App">
        <h1>React app</h1>
-       <button style={style} onClick={() => this.switchNameHandler('Dario!!!')}> Switch Name </button>
-       <button style={style} onClick={this.togglePersonsHandler}> Show Persons </button>
+       <p className={classes.join(' ')}>It's working</p>
+       {/* <button style={style} onClick={() => this.switchNameHandler('Dario!!!')}> Switch Name </button> */}
+       <button 
+       style={style} 
+       onClick={this.togglePersonsHandler}>
+         Show Persons
+         </button>
         {personsList}
         {/* PARA REALISAR UN CONDICIONAL LO MEJOR ES USAR EL JXS EN UNA VARIABLE DENTRO
         DEL METODO RENDER */}
       </div>
+      //</StyleRoot>
     )
   //return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hola, estoy creado desde React.createElement'));
 }
 }
 
+//export default Radium(App);
 export default App;
