@@ -1,5 +1,4 @@
 import React from 'react';
-//import Radium from 'radium';
 import styled from 'styled-components';
 import './Person.css';
 
@@ -16,21 +15,14 @@ const StyledDiv = styled.div`
                     `;
 
 const person = props => {
-    /* const style = {
-        '@media (min-width: 500px)': {
-            width: '450px'
-        }
-    } */
+
     return (
     <StyledDiv>
-        {/* <div className="Person" style={style}> */}
         <p onClick={props.click}>Soy {props.name} y tengo {props.age} años.</p>
         <p>{props.children}</p>
         <input type="text" onChange={props.changed} value={props.name}/>
-        {/* </div> */}
     </StyledDiv>
     );
 }
 
-//export default Radium(person);
 export default person;
