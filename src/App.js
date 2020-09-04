@@ -1,64 +1,7 @@
 import React, { Component } from 'react'; //CON CLASES
-//import React, { useState } from 'react'; //CON HOOKS
-//import Radium, { StyleRoot } from 'radium';
-import Styled from 'styled-components';
+import Radium, { StyleRoot } from 'radium'; //importar StyleRoot y envolver toda la app para habilitar toda la funcionalidad
 import Person from './Person/Person';
 import './App.css';
-
-const StyledBtn = Styled.button`
-                background-color: ${props => props.alt ? "red" : "green"};
-                color: white;
-                font: inherit;
-                border: 1px solid blue;
-                padding: 8px;
-                cursor: pointer;
-                &:hover {
-                  background-color: ${props => props.alt ? 'salmon' : 'yellowgreen'};
-                  color: black;`;
-
-//ACA USO EL STATE CON HOOK
-
-// const app = props => {
-
-//   const [personsState, setPersonsState] = useState({ 
-//     persons: [
-//       {name: 'Lucas', age: 35},
-//       {name: 'Magdalena', age: 35},
-//       {name: 'Ramón', age: 4},
-//     ]
-//   })
-// //CON HOOK useState PUEDE DECLARAR MUTIPLES STATES Y ACATUALIZAR CADA UNO POR SEPARADO
-//   const [otherState, setOtherState] = useState({name: "Lucas"});
-
-//   console.log(personsState, otherState);
-
-//   const switchNameHandler = () => {
-//    setPersonsState({
-//      persons: [
-//       {name: 'Lucaster', age: 35},
-//       {name: 'Magda', age: 35},
-//       {name: 'Moncho', age: 4},
-//   ]})
-   
-   
-//     // console.log('Clickeado');
-//   }
-  
-//     return (
-//       <div className="App">
-//        <h1>React app</h1>
-//        <button onClick={switchNameHandler}> Switch Name </button>
-//        <Person name={personsState.persons[0].name} age={personsState.persons[0].age}/>
-//        <Person name={personsState.persons[1].name} age={personsState.persons[1].age}>Un texto desde children</Person>
-//        <Person name={personsState.persons[2].name} age={personsState.persons[2].age}/>
-//       </div>
-//     )
-//   //return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hola, estoy creado desde React.createElement'));
-// }
-
-// export default app;
-
-//ACA USO ES STATE CON CLASES
 
 class App extends Component {
   
@@ -71,19 +14,9 @@ class App extends Component {
      otherState: "Some other State",
      showPersons: false
   }
-  // CUANDO HAGO EL setState HACE UN MERGE Y MANTIENE LOS ESTADOS QUE NO ESTOY REFERENCIANDO
-  /* switchNameHandler = newName => {
-    this.setState({
-      persons: [
-        {name: newName, age: 35},
-        {name: 'Magda', age: 35},
-        {name: 'Moncho', age: 4},
-      ]})
-    } */
     
     deletePersonHandler = (indexPerson) => {
-      //let persons = this.state.persons.slice(); //ESTO DEVUELVE UNA COPIA DEL ARRAY PARA NO MANIPULAR EL STATE
-      const persons = [...this.state.persons]; //spread operator, creo un nuevo array con los datos del state
+      const persons = [...this.state.persons];
       persons.splice(indexPerson, 1);
       this.setState({persons}) //persons: persons
     }
@@ -96,13 +29,13 @@ class App extends Component {
       const person = {
         ...this.state.persons[personIndex]
       }
-      
       person.name = event.target.value;
       
       const persons = [...this.state.persons];
       persons[personIndex] = person;
       
       this.setState({persons})
+      console.log(person);
     }
     
     togglePersonsHandler = () => {
@@ -114,18 +47,18 @@ class App extends Component {
   //EN LOS EVENTOS onClick VEMOS DOS MANERAS DIFERENTES DE PASARLE DATA
   //bind() es mas recomendable que () => 
   render() {
-    // const style = {
-      //   backgroundColor: 'green',
-      //   color: 'white',
-      //   font: 'inherit',
-      //   border: '1px solid blue',
-      //   padding: '8px',
-      //   cursor: 'pointer',
-      //   ':hover' : {
-        //     backgroundColor: 'yellowgreen',
-        //     color: 'black'
-        //   }
-        // }
+    const style = {
+        backgroundColor: 'green',
+        color: 'white',
+        font: 'inherit',
+        border: '1px solid blue',
+        padding: '8px',
+        cursor: 'pointer',
+        ':hover' : { //radium me permite usar :HOVER con un estilo en linea
+            backgroundColor: 'yellowgreen',
+            color: 'black'
+          }
+        }
         
         let personsList = null;
         console.log(this.state.showPersons);
@@ -141,25 +74,14 @@ class App extends Component {
             age={person.age}
             changed={(event) => this.nameChangedHandler(event, person.id)}/>
           })}
-          {/* <Person 
-          name={this.state.persons[0].name} 
-          age={this.state.persons[0].age}/>
-          <Person
-          name={this.state.persons[1].name} 
-          age={this.state.persons[1].age}
-          click={this.switchNameHandler.bind(this, "Castro")}
-          changed={this.nameChangedHandler}>Un texto desde children</Person>
-          <Person 
-          name={this.state.persons[2].name} 
-          age={this.state.persons[2].age}/> */}
         </div>        
       );
-          //Puedo cambiar el estilo con el condicional, ya que "style" es un {} de JS
-      // style.backgroundColor = 'red';
-      // style[':hover'] = {
-      //   backgroundColor: 'salmon',
-      //   color: 'black'
-      // }
+      //     Puedo cambiar el estilo con el condicional, ya que "style" es un {} de JS
+      style.backgroundColor = 'red';
+      style[':hover'] = { //por mas sea una propiedad lo pongo entre [] para modificarlo
+        backgroundColor: 'salmon', //porque es un string, radium se encarga de manejarlo
+        color: 'black'
+      }
     }
 
       const classes = [];
@@ -167,26 +89,19 @@ class App extends Component {
       if (this.state.persons.length <= 1) classes.push('bold')
 
     return (
-      //<StyleRoot> {/* USO ESTA ETIQUETA EN APP PARA QUE FUNCIONEN LAS @MEDIA QUERYS DE RADIUM */}
-      <div className="App">
+      <StyleRoot className="App"> {/* USO ESTA ETIQUETA EN APP PARA QUE FUNCIONEN LAS @MEDIA QUERYS DE RADIUM */}
        <h1>React app</h1>
        <p className={classes.join(' ')}>It's working</p>
-       {/* <button style={style} onClick={() => this.switchNameHandler('Dario!!!')}> Switch Name </button> */}
-       <StyledBtn 
+       <button 
        alt={this.state.showPersons}
-       /* style={style} */ 
+       style={style} 
        onClick={this.togglePersonsHandler}>
          Show Persons
-         </StyledBtn>
+         </button>
         {personsList}
-        {/* PARA REALISAR UN CONDICIONAL LO MEJOR ES USAR EL JXS EN UNA VARIABLE DENTRO
-        DEL METODO RENDER */}
-      </div>
-      //</StyleRoot>
+      </StyleRoot>
     )
-  //return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hola, estoy creado desde React.createElement'));
 }
 }
 
-//export default Radium(App);
-export default App;
+export default Radium(App);
