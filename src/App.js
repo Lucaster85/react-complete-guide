@@ -1,192 +1,97 @@
-import React, { Component } from 'react'; //CON CLASES
-//import React, { useState } from 'react'; //CON HOOKS
-//import Radium, { StyleRoot } from 'radium';
-import Styled from 'styled-components';
+import React, { useState } from 'react'; //CON HOOKS
 import Person from './Person/Person';
 import './App.css';
 
-const StyledBtn = Styled.button`
-                background-color: ${props => props.alt ? "red" : "green"};
-                color: white;
-                font: inherit;
-                border: 1px solid blue;
-                padding: 8px;
-                cursor: pointer;
-                &:hover {
-                  background-color: ${props => props.alt ? 'salmon' : 'yellowgreen'};
-                  color: black;`;
-
 //ACA USO EL STATE CON HOOK
 
-// const app = props => {
-
-//   const [personsState, setPersonsState] = useState({ 
-//     persons: [
-//       {name: 'Lucas', age: 35},
-//       {name: 'Magdalena', age: 35},
-//       {name: 'Ramón', age: 4},
-//     ]
-//   })
-// //CON HOOK useState PUEDE DECLARAR MUTIPLES STATES Y ACATUALIZAR CADA UNO POR SEPARADO
-//   const [otherState, setOtherState] = useState({name: "Lucas"});
-
-//   console.log(personsState, otherState);
-
-//   const switchNameHandler = () => {
-//    setPersonsState({
-//      persons: [
-//       {name: 'Lucaster', age: 35},
-//       {name: 'Magda', age: 35},
-//       {name: 'Moncho', age: 4},
-//   ]})
-   
-   
-//     // console.log('Clickeado');
-//   }
-  
-//     return (
-//       <div className="App">
-//        <h1>React app</h1>
-//        <button onClick={switchNameHandler}> Switch Name </button>
-//        <Person name={personsState.persons[0].name} age={personsState.persons[0].age}/>
-//        <Person name={personsState.persons[1].name} age={personsState.persons[1].age}>Un texto desde children</Person>
-//        <Person name={personsState.persons[2].name} age={personsState.persons[2].age}/>
-//       </div>
-//     )
-//   //return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hola, estoy creado desde React.createElement'));
-// }
-
-// export default app;
-
-//ACA USO ES STATE CON CLASES
-
-class App extends Component {
-  
-  state = {
+const app = props => {
+  //useState devuelve un array con dos indices
+  //hacemos destructuring const [indice 0, indice 1] = useState({})
+  const [personsState, setPersonsState] = useState({ 
     persons: [
-      {id: 'lakjsdhf', name: 'Lucas', age: 35},
+      {id: 'lakjsdh', name: 'Lucas', age: 35},
       {id: 'jfkdls', name: 'Magdalena', age: 35},
-      {id: 'pwoqueyrd', name: 'Ramón', age: 4},
-    ],
-     otherState: "Some other State",
-     showPersons: false
+      {id: 'pwoquey', name: 'Ramón', age: 4},
+    ]
+  })
+//CON HOOK useState PUEDE DECLARAR MUTIPLES STATES Y ACATUALIZAR CADA UNO POR SEPARADO
+  const [otherState, setOtherState] = useState({name: "Lucas"});
+
+  const [showPersonsState, setShowPersonsState] = useState({showPersons: false});
+
+  console.log(personsState.persons, otherState);
+
+  const switchNameHandler = () => {
+   setPersonsState({
+     persons: [
+      {id: 'lakjsdh', name: 'Lucaster', age: 35},
+      {id: 'jfkdls', name: 'Magda', age: 35},
+      {id: 'pwoquey', name: 'Moncho', age: 4},
+  ]})
+   
+}
+  const deletePersonHandler = (indexPerson) => {
+    const persons = [...personsState.persons];
+    persons.splice(indexPerson, 1);
+    setPersonsState({persons}) //persons: persons
   }
-  // CUANDO HAGO EL setState HACE UN MERGE Y MANTIENE LOS ESTADOS QUE NO ESTOY REFERENCIANDO
-  /* switchNameHandler = newName => {
-    this.setState({
-      persons: [
-        {name: newName, age: 35},
-        {name: 'Magda', age: 35},
-        {name: 'Moncho', age: 4},
-      ]})
-    } */
+    // console.log('Clickeado');
+
+  const nameChangedHandler = (event, id) => {
+    const personIndex = personsState.persons.findIndex((person) => {
+      return person.id === id;
+    });
     
-    deletePersonHandler = (indexPerson) => {
-      //let persons = this.state.persons.slice(); //ESTO DEVUELVE UNA COPIA DEL ARRAY PARA NO MANIPULAR EL STATE
-      const persons = [...this.state.persons]; //spread operator, creo un nuevo array con los datos del state
-      persons.splice(indexPerson, 1);
-      this.setState({persons}) //persons: persons
+    const person = {
+      ...personsState.persons[personIndex]
     }
     
-    nameChangedHandler = (event, id) => {
-      const personIndex = this.state.persons.findIndex((person) => {
-        return person.id === id;
-      });
-      
-      const person = {
-        ...this.state.persons[personIndex]
-      }
-      
-      person.name = event.target.value;
-      
-      const persons = [...this.state.persons];
-      persons[personIndex] = person;
-      
-      this.setState({persons})
-    }
+    person.name = event.target.value;
     
-    togglePersonsHandler = () => {
-      const doesShow = this.state.showPersons;
-      this.setState({showPersons: !doesShow})
+    const persons = [...personsState.persons];
+    persons[personIndex] = person;
+    
+    setPersonsState({persons})
   }
 
-  // console.log('Clickeado');
-  //EN LOS EVENTOS onClick VEMOS DOS MANERAS DIFERENTES DE PASARLE DATA
-  //bind() es mas recomendable que () => 
-  render() {
-    // const style = {
-      //   backgroundColor: 'green',
-      //   color: 'white',
-      //   font: 'inherit',
-      //   border: '1px solid blue',
-      //   padding: '8px',
-      //   cursor: 'pointer',
-      //   ':hover' : {
-        //     backgroundColor: 'yellowgreen',
-        //     color: 'black'
-        //   }
-        // }
+  const togglePersonsHandler = () => {
+    const doesShow = showPersonsState.showPersons;
+    setShowPersonsState({showPersons: !doesShow})
+}
+
+let personsList = null;
+        console.log(showPersonsState.showPersons);
         
-        let personsList = null;
-        console.log(this.state.showPersons);
-        
-        if (this.state.showPersons) {
-          personsList = (
-            <div>
-          {this.state.persons.map((person, i) => {
+        if (showPersonsState.showPersons) {
+          personsList = 
+          personsState.persons.map((person, i) => {
             return <Person
             key={person.id}
-            click={() => this.deletePersonHandler(i)}
+            click={() => deletePersonHandler(i)}
             name={person.name}
             age={person.age}
-            changed={(event) => this.nameChangedHandler(event, person.id)}/>
+            changed={(event) => nameChangedHandler(event, person.id)}/>
           })}
-          {/* <Person 
-          name={this.state.persons[0].name} 
-          age={this.state.persons[0].age}/>
-          <Person
-          name={this.state.persons[1].name} 
-          age={this.state.persons[1].age}
-          click={this.switchNameHandler.bind(this, "Castro")}
-          changed={this.nameChangedHandler}>Un texto desde children</Person>
-          <Person 
-          name={this.state.persons[2].name} 
-          age={this.state.persons[2].age}/> */}
-        </div>        
-      );
-          //Puedo cambiar el estilo con el condicional, ya que "style" es un {} de JS
-      // style.backgroundColor = 'red';
-      // style[':hover'] = {
-      //   backgroundColor: 'salmon',
-      //   color: 'black'
-      // }
-    }
+            
+  const classes = [];
+      if (personsState.persons.length <= 2) classes.push('red')
+      if (personsState.persons.length <= 1) classes.push('bold')
 
-      const classes = [];
-      if (this.state.persons.length <= 2) classes.push('red')
-      if (this.state.persons.length <= 1) classes.push('bold')
-
-    return (
-      //<StyleRoot> {/* USO ESTA ETIQUETA EN APP PARA QUE FUNCIONEN LAS @MEDIA QUERYS DE RADIUM */}
+  const style = {
+    backgroundColor: 'green'
+  }
+  return (
       <div className="App">
        <h1>React app</h1>
-       <p className={classes.join(' ')}>It's working</p>
-       {/* <button style={style} onClick={() => this.switchNameHandler('Dario!!!')}> Switch Name </button> */}
-       <StyledBtn 
-       alt={this.state.showPersons}
-       /* style={style} */ 
-       onClick={this.togglePersonsHandler}>
+       <p className={classes.join(' ')} onClick={switchNameHandler}>It's working</p>
+       <button 
+       style={style} 
+       onClick={togglePersonsHandler}>
          Show Persons
-         </StyledBtn>
+         </button>
         {personsList}
-        {/* PARA REALISAR UN CONDICIONAL LO MEJOR ES USAR EL JXS EN UNA VARIABLE DENTRO
-        DEL METODO RENDER */}
       </div>
-      //</StyleRoot>
     )
-  //return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hola, estoy creado desde React.createElement'));
-}
 }
 
-//export default Radium(App);
-export default App;
+export default app;
