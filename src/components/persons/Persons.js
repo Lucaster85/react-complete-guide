@@ -8,7 +8,13 @@ class Persons extends React.Component {
     // }
     shouldComponentUpdate(nextProps, nextState) {
         console.log('[Persons.js shouldComponentUpdate');
-        return true;
+        console.log(nextProps.persons);
+        console.log(this.props.persons);
+        if (this.props.persons !== nextProps.persons) {
+            return true;
+        } else {
+            return false;
+        }
     }
     getSnapshotBeforeUpdate(prevProps, prevState) {
         console.log('[Perons.js] getSnapshotBeforeUpdate');
@@ -18,17 +24,20 @@ class Persons extends React.Component {
         console.log('[Persons.js] componentDidUpdate');
         console.log(snapshot);
     }
+    componentWillUnmount() {
+        console.log('[Persons.js] componentWillUnmount');
+    }
     render() {
     console.log('[Persons.js] rendering...');
     return this.props.persons.map((person, i) => {
-    return <Person 
+    return (<Person 
                 click={() => this.props.clicked(i)}
                 name={person.name}
                 age={person.age}
                 key={person.name + i}
                 changed={(e) => this.props.changed(e, person.id )}
                 />
-        }
+    )}
     )}
 }
 
