@@ -1,6 +1,7 @@
 import React from 'react';
 
 const person = props => {
+    console.log('[Person.js] rendering....');
     return (
         <div className="Person" >
             <p onClick={props.click}>Soy {props.name} y tengo {props.age} años.</p>
